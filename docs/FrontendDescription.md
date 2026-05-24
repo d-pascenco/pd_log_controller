@@ -53,5 +53,5 @@ python -m streamlit run app/Home.py
 
 Лучше сразу записать все зависимости:
 ```bash
-pip freeze > requirements.txt
+pip freeze > requirements.txt.txt.old
 ```

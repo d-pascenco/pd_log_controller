@@ -26,4 +26,10 @@ models/*.pkl
 models/*.joblib
 models/*.pt
 
+# документация
+docs/
+*.md
 
+# докер сущности
+docker-compose.yml
+Dockerfile

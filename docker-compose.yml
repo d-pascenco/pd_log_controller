@@ -1,13 +1,17 @@
 services:
   backend:
     build: .
+    image: pd_log_controller:1.2
+    container_name: pd_log_controller
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     restart: unless-stopped
 
   frontend:
-    build: .
+    image: pd_log_controller:1.2
+    depends_on:
+      - backend
     command: streamlit run app/Home.py --server.address=0.0.0.0 --server.port=8501
     ports:
       - "8501:8501"

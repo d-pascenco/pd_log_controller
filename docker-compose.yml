@@ -1,26 +1,14 @@
-# описать множество образов которые подключаю и их настройки
-version: 'версия' (н-р: 3.1)
-# ниже названия сервисов, которые подключаю
 services:
-  db:
-    image:  н-р образ martiadb:10.3                        # характеритики сервисов
-    restart: что будет делать образ, если прекратит работу (no - не перезапускать, always - всегда будет перезапускать сервис)
-    command: -- (аналог CMD из Dоckerfile , т.е какую команду мы хотим запускать при запуске образа)
-    environment: настройки для работы с образом (н-р логин и пароль для подключения и др. переменные)
-      MYSQL_ROOT_PASSWORD:
-
-  php:
-    build: (указываем путь где есть Dоckerfile и тогда он заберет его конфигурацию)
+  backend:
+    build: .
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
     ports:
-      - 8081:80    # мы указали отдельный порт для локальной машины - они должны быть разные
+      - "8000:8000"
+    restart: unless-stopped
 
-phpmyadmin:
-  image:                              # характеритики сервисов
-  restart:
-  ports:
-    - 8080:80
-  environment:
-    - PMA_ARBITRARY:
-
-
-# чтобы запустить комнада 'docker-compose build' и далее 'docker-compose up' - скачает образы, если их нет
+  frontend:
+    build: .
+    command: streamlit run app/Home.py --server.address=0.0.0.0 --server.port=8501
+    ports:
+      - "8501:8501"
+    restart: unless-stopped

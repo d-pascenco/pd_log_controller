@@ -242,7 +242,7 @@ docker run -d --name myapp myapp:1.0
 что не отправлять в build context при docker build (т.е. список правил игнора).
 Нужен, чтобы ускорить сборку (не тащить лишние файлы), уменьшить размер контекста сборки, 
 не дать случайно упаковать секреты, логи, кэш, .venv, .git и т.д.
-Должен лежать в корне контекста сборки (рядом с Dockerfile)
+Должен лежать в корне контекста сборки (рядом с Dockerfile).
 
 
 **Как работает (пример):**
@@ -264,3 +264,61 @@ logs
 
 .dockerignore влияет на контекст сборки, а не на уже запущенный контейнер.
 Если файла нет, Docker может отправить в сборку вообще всё из папки проекта.
+
+### 7. docker-compose
+
+docker-compose — способ описать несколько сервисов (контейнеров) в одном файле
+и поднять их одной командой. Без него пришлось бы для каждого сервиса 
+вручную писать `docker run` с кучей аргументов.
+
+Файл `docker-compose.yml` лежит в корне проекта.
+
+**Структура файла:**
+```yaml
+services:
+  имя_сервиса:
+    build: .              # путь к Dockerfile (точка = текущая папка)
+    command: ...          # переопределяет CMD из Dockerfile
+    ports:
+      - "хост:контейнер"  # проброс портов
+    restart: unless-stopped
+```
+
+`build: .` — говорит docker-compose: "собери образ из Dockerfile в текущей папке".
+`command:` — переопределяет CMD из Dockerfile. Удобно, когда один образ,
+но разные сервисы запускают разные команды.
+`restart: unless-stopped` — перезапускать контейнер, если упал, кроме случая ручной остановки.
+
+**Несколько сервисов из одного образа:**
+
+Если в проекте один Dockerfile, но нужно запустить и бэкенд, и фронтенд —
+в docker-compose просто делаем два сервиса с разными `command:`.
+Dockerfile в таком случае не содержит CMD, потому что команду задаёт docker-compose.
+
+Пример для нашего проекта:
+```yaml
+services:
+  backend:
+    build: .
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    command: streamlit run app/Home.py --server.address=0.0.0.0 --server.port=8501
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+```
+
+**Основные команды docker-compose:**
+`docker compose up --build` — собрать образы и запустить все сервисы.
+`docker compose up -d --build` — то же самое, но в фоне.
+`docker compose logs -f` — смотреть логи всех сервисов.
+`docker compose logs -f backend` — логи только бэкенда.
+`docker compose down` — остановить и удалить контейнеры.
+`docker compose down -v` — то же + удалить тома (данные БД и т.д.).
+`docker compose ps` — показать статус запущенных сервисов.
+`docker compose restart backend` — перезапустить конкретный сервис.

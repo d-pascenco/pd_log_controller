@@ -349,3 +349,48 @@ volumes:
 `docker compose down -v` — то же + удалить тома (данные БД и т.д.).
 `docker compose ps` — показать статус запущенных сервисов.
 `docker compose restart backend` — перезапустить конкретный сервис.
+
+### 8. docker-compose.prod.yml
+
+Отдельный compose-файл для сервера. Отличие от основного `docker-compose.yml`:
+- нет `build: .` — на сервере нет исходников, незачем собирать
+- вместо этого `image: docker.io/pascencode/pd_log_controller:тег` — тянет готовый образ с Docker Hub
+- фронтенду прокинут `API_URL: http://backend:8000` — чтобы Streamlit знал, куда стучаться
+
+Запуск на сервере:
+```bash
+podman-compose -f docker-compose.prod.yml up -d
+```
+
+### 9. Сеть между контейнерами
+
+Каждый контейнер — это отдельная "машина". `localhost` внутри контейнера frontend —
+это сам frontend, а не backend. Поэтому нельзя писать `http://localhost:8000`.
+
+Контейнеры обращаются друг к другу по имени сервиса из docker-compose:
+- frontend → backend: `http://backend:8000`
+- backend → db: `db:5432`
+
+В коде это решается через переменную окружения `API_URL`,
+которая прокидывается в docker-compose и читается в `app/Home.py`.
+
+### 10. Dockerfile — системные зависимости
+
+`psycopg2-binary` не имеет готового wheel для Python 3.14,
+поэтому pip собирает его из исходников. Для этого нужны:
+- `libpq-dev` — заголовки PostgreSQL
+- `gcc` — компилятор C
+
+Ставим их через `apt-get` перед `pip install`.
+`rm -rf /var/lib/apt/lists/*` в конце — чистим кэш apt, чтоб образ не раздувался.
+
+Также `pip install --upgrade pip` перед установкой зависимостей —
+чтобы не было warning-а про устаревший pip.
+
+### 11. infra/sql/
+
+Папка для SQL-схем таблиц. Это не для автоматических миграций,
+а просто справочник — чтобы можно было глянуть структуру таблицы
+без чтения Python-кода. Или создать таблицу вручную если нужно.
+
+Нумерация файлов (`001_`, `002_`) — чтобы был порядок создания.

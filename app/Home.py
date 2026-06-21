@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import requests
 from pathlib import Path
@@ -11,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.title("PD Log Controller")
 

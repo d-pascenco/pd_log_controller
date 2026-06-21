@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: docker.io/pascencode/pd_log_controller:1.5
+    image: docker.io/pascencode/pd_log_controller:1.7
     container_name: pd_log_controller
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
     ports:
@@ -25,12 +25,14 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: docker.io/pascencode/pd_log_controller:1.5
+    image: docker.io/pascencode/pd_log_controller:1.7
     depends_on:
       - backend
     command: streamlit run app/Home.py --server.address=0.0.0.0 --server.port=8501
     ports:
       - "8501:8501"
+    environment:
+      API_URL: http://backend:8000
     restart: unless-stopped
 
 volumes:

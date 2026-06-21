@@ -32,6 +32,8 @@ services:
     command: streamlit run app/Home.py --server.address=0.0.0.0 --server.port=8501
     ports:
       - "8501:8501"
+    environment:
+      API_URL: http://backend:8000
     restart: unless-stopped
 
 volumes:

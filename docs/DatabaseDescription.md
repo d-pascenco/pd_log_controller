@@ -134,3 +134,10 @@ docker exec -it pd_log_db psql -U pd_user -d pd_logs
 Посмотреть таблицы: `\dt`
 Посмотреть содержимое: `SELECT * FROM logs;`
 Выйти: `\q`
+
+### 9. Полезные запросы
+
+#### 9.1. Удаление таблицы
+```sql
+DROP TABLE logs;
+```

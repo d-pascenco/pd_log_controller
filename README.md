@@ -22,6 +22,11 @@ pd_log_controller/
 ├─ .ssh                         # shh ключи
 │  ├─ git                       # ssh для гита
 │  └─ oracle                    # ssh для хоста
+│ 
+├─ .stramlit                    # директория Streamlit
+│   ├─ config.toml              # файл конфигурации Streamlit
+│   └─   
+│ 
 ├─ app/                         # Streamlit-фронтенд (страницы UI, графики, фильтры)
 │  ├─ Home.py
 │  ├─ assets/                   # картинки, css, иконки т.д.
@@ -64,6 +69,7 @@ pd_log_controller/
 ├─ scripts/                     # простые скрипты запуска
 │   ├─ start.sh                 # башевский скрипт запуска сервисов (docker)
 │   └─
+│ 
 ├─ tests/                       # тесты (мои наработки, не пушу)
 │ 
 ├─ monitoring/                  # будущий мониторинг (хочу прикрутить свой)

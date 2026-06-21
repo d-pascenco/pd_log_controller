@@ -1,0 +1,8 @@
+# https://docs.streamlit.io/develop/api-reference/configuration/config.toml
+[client]
+
+[theme]
+
+
+# Max size, in megabytes, for files uploaded with the file_uploader.
+maxUploadSize = 200

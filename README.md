@@ -34,6 +34,9 @@ pd_log_controller/
 │  ├─ data/                     # код для обработки данных
 │  ├─ features/                 # превращение логов в признаки
 │  ├─ models/                   # обучение и предсказание модели
+│  ├─ db/                       # работа с базой данных
+│  │  ├─ database.py            # подключение к БД (engine, session, get_db)
+│  │  └─ models.py              # ORM-модели таблиц (SQLAlchemy)
 │  ├─ api/                      # FastAPI
 │  │  ├─ main.py                # точка входа, создание app, подключение роутеров
 │  │  ├─ routes/                # эндпоинты, сгруппированные по смыслу
@@ -69,12 +72,15 @@ pd_log_controller/
 │  └─ exporters/                # в теории
 │
 ├─ infra/                       # инфраструктура в далеком будущем (вроде кубера, тераформа и т.д.)
+│  ├─ sql/                      # SQL-схемы таблиц (справочник структуры БД)
+│  │  └─ 001_create_logs.sql    # таблица logs
 │  └─ docker/                   
 │
 ├─ .gitignore                   # исключения для Git
 ├─ .dockerignore                # исключения для Docker
 ├─ Dockerfile
 ├─ docker-compose.yml
+├─ docker-compose.prod.yml      # compose для сервера (без build, тянет образ с Docker Hub)
 ├─ LICENSE                      # лицензия проекта (MIT)
 ├─ README.md                    # общее описание проекта (стек, идея, запуск)
 ├─ requirements.txt             # Python-зависимости

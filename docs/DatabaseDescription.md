@@ -52,7 +52,44 @@ pip install sqlalchemy psycopg2-binary
 - `SessionLocal` — фабрика сессий. Сессия — это одна "транзакция" с БД.
 - `get_db()` — функция, которая выдаёт сессию для запроса и закрывает после.
 
-### 5. Модели
+### 5. Код подключения (`src/db/database.py`)
+
+```python
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://pd_user:pd_pass@localhost:5432/pd_logs")
+```
+Берём строку подключения из переменной окружения (прокинута в docker-compose).
+Если переменной нет (локальная разработка) — используется значение по умолчанию.
+
+```python
+engine = create_engine(DATABASE_URL)
+```
+Само подключение к БД. Создаётся один раз при старте.
+SQLAlchemy через него отправляет все SQL-запросы в PostgreSQL.
+
+```python
+SessionLocal = sessionmaker(bind=engine)
+```
+Фабрика сессий. Каждый раз когда нужно что-то сделать с БД
+(записать, прочитать) — создаём новую сессию через `SessionLocal()`.
+
+```python
+Base = declarative_base()
+```
+Базовый класс для моделей. Все таблицы будут от него наследоваться.
+Он же потом создаст таблицы в БД через `Base.metadata.create_all(engine)`.
+
+```python
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+```
+Функция-генератор для FastAPI. Для каждого запроса: получить сессию → выполнить работу → закрыть.
+`yield` + `finally` гарантирует что сессия закроется даже при ошибке.
+
+### 6. Модели
 
 Файл `src/db/models.py`:
 Модель — это Python-класс, который описывает таблицу в БД.
@@ -69,7 +106,7 @@ class Log(Base):
 `__tablename__` — имя таблицы в БД.
 `primary_key=True` — уникальный идентификатор строки.
 
-### 6. Основные операции
+### 7. Основные операции
 
 Добавить запись:
 ```python
@@ -88,7 +125,7 @@ logs = db.query(Log).all()
 errors = db.query(Log).filter(Log.level == "ERROR").all()
 ```
 
-### 7. Полезные команды
+### 8. Полезные команды
 
 Зайти в БД внутри контейнера:
 ```bash

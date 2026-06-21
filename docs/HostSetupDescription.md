@@ -169,6 +169,13 @@ sudo ss -tulpn | grep 8501
 sudo ss -tulpn | grep 8000
 ```
 
+### 2.8 Установка podman compose
+
+```bash
+sudo dnf install python3-pip -y
+pip3 install podman-compose
+```
+
 ## 3. Первая диагностика SSH-доступа
 
 ### 3.1 Подключение по SSH
@@ -301,6 +308,13 @@ POSTGRES_PASSWORD=пароль_юзера
 POSTGRES_DB=название_базы
 EOF
 ```
+
+### 6.3 Файл docker compose
+Копируем в эту же директорию
+```text
+docker-compose.prod.yml
+```
+
 
 ## 7. Запуск приложений проекта
 

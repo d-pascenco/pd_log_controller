@@ -313,6 +313,33 @@ services:
     restart: unless-stopped
 ```
 
+**`depends_on:`** — порядок запуска. Если бэкенд зависит от БД,
+пишем `depends_on: - db` и тогда контейнер БД поднимется первым.
+
+**`environment:`** — переменные окружения для контейнера.
+Через них передаём настройки: логины, пароли, адреса подключения.
+```yaml
+environment:
+  DATABASE_URL: postgresql://user:pass@db:5432/mydb
+```
+`db` в адресе — это имя сервиса в docker-compose. Контейнеры внутри одной сети
+видят друг друга по имени сервиса вместо IP.
+
+**`volumes:`** — тома для хранения данных вне контейнера.
+Без тома все данные теряются при пересоздании контейнера.
+```yaml
+services:
+  db:
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+```
+`pg_data` — именованный том. Docker сам решает где его хранить на диске.
+`/var/lib/postgresql/data` — путь внутри контейнера, где PostgreSQL хранит данные.
+Блок `volumes:` в конце файла — объявление тома.
+
 **Основные команды docker-compose:**
 `docker compose up --build` — собрать образы и запустить все сервисы.
 `docker compose up -d --build` — то же самое, но в фоне.

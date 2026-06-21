@@ -1,6 +1,5 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
+import requests
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -12,27 +11,42 @@ st.set_page_config(
     layout="wide"
 )
 
-# Ввод имени
-name = st.text_input('Введите имя студента:', placeholder="Студент")
+API_URL = "http://localhost:8000"
 
-# Слайдер для числа
-number = st.slider('Введите число:', 0, 10, 5)
+st.title("PD Log Controller")
 
-# Кнопка для расчета
-if st.button('Посчитать квадрат!'):
-    result = number ** 2
-    st.success(f'Привет, {name}! Квадрат числа {number} = {result}')
-    st.balloons()
+st.header("Отправить лог")
 
-df = pd.DataFrame(np.random.randn(10, 4), columns=list('ABCD'))
-df
+message = st.text_input("Сообщение лога:")
+level = st.selectbox("Уровень:", ["INFO", "WARNING", "ERROR", "CRITICAL"])
+source = st.text_input("Источник:", placeholder="...")
 
+if st.button("Отправить"):
+    if message and source:
+        response = requests.post(f"{API_URL}/logs", json={
+            "message": message,
+            "level": level,
+            "source": source
+        })
+        if response.status_code == 200:
+            st.success("Лог отправлен")
+        else:
+            st.error(f"Ошибка: {response.status_code}")
+    else:
+        st.warning("Заполни сообщение и источник")
 
-import matplotlib.pyplot as plt
-import numpy as np
+st.header("Все логи")
 
-arr = np.random.normal(1, 1, size=100)
-fig, ax = plt.subplots()
-ax.hist(arr, bins=20)
+if st.button("Обновить"):
+    pass
 
-fig
+response = requests.get(f"{API_URL}/logs")
+if response.status_code == 200:
+    data = response.json()
+    st.write(f"Всего логов: {data['count']}")
+    if data["logs"]:
+        st.table(data["logs"])
+    else:
+        st.info("Логов пока нет")
+else:
+    st.error("Не удалось получить логи. Бэкенд недоступен?")

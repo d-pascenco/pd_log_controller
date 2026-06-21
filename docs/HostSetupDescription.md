@@ -282,9 +282,29 @@ sudo dnf install -y git curl wget nano htop tmux firewalld openssh-clients
 sudo dnf repolist
 ```
 
-## 6. Запуск приложений проекта
+## 6. Подготовка файловой системы
 
-### 6.1 Streamlit
+### 6.1 Директория проекта
+
+Нужно создать директорию для секретов и других локальных файлов
+
+```bash
+mkdir ~/pd_log_controller && cd ~/pd_log_controller
+```
+
+### 6.2 Файл секретов
+
+```bash
+cat <<'EOF' > .env
+POSTGRES_USER=логин_юзера
+POSTGRES_PASSWORD=пароль_юзера
+POSTGRES_DB=название_базы
+EOF
+```
+
+## 7. Запуск приложений проекта
+
+### 7.1 Streamlit
 Streamlit обычно использует порт `8501`.
 Чтобы приложение было доступно снаружи сервера, нужно запускать его на адресе `0.0.0.0`:
 ```bash
@@ -306,7 +326,7 @@ sudo ss -tulpn | grep 8501
 127.0.0.1:8501 -- значит приложение доступно только внутри сервера.
 ```
 
-### 6.2 FastAPI
+### 7.2 FastAPI
 FastAPI обычно запускается через `uvicorn` на порту `8000`.
 
 Пример запуска:

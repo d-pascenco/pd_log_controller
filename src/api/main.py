@@ -12,6 +12,9 @@ class LogEntry(BaseModel):
     level: str
     source: str
 
+def format_timestamp(ts):
+    return ts.strftime('%Y-%m-%d %H:%M:%S.%f')
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
@@ -25,7 +28,7 @@ def create_log(entry: LogEntry, db: Session = Depends(get_db)):
     return {"status": "created", "log": {
         "id": log.id,
         "source": log.source,
-        "timestamp": log.timestamp.isoformat(),
+        "timestamp": format_timestamp(log.timestamp),
         "level": log.level,
         "message": log.message
     }}
@@ -37,7 +40,7 @@ def get_logs(db: Session = Depends(get_db)):
         {
             "id": log.id,
             "source": log.source,
-            "timestamp": log.timestamp.isoformat(),
+            "timestamp": format_timestamp(log.timestamp),
             "level": log.level,
             "message": log.message
         }

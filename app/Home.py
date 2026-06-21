@@ -50,7 +50,7 @@ with st.expander("Импорт из файла", expanded=False):
             df = pd.read_excel(uploaded_file)
 
         st.dataframe(df, height=200, use_container_width=True)
-        st.button("Upload (не работает еще, я API не подключил)")                   # заглушка
+        st.button("Upload (не работает еще, я эндпоинт не подключил)")                   # заглушка
 
 st.header("Все логи")
 

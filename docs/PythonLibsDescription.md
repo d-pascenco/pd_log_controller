@@ -37,3 +37,32 @@ Docs: https://docs.python.org/3/library/pathlib.html
 ### 2. Pandas
 ### 3. Numpy
 ### 4. Matplotlib
+
+### 5. Pydantic
+
+Docs: https://docs.pydantic.dev/latest/
+
+Библиотека для валидации данных. FastAPI использует её для проверки входящих запросов.
+Основная идея: описываешь класс-схему, а Pydantic проверяет, что данные ей соответствуют.
+
+```python
+from pydantic import BaseModel
+
+class LogEntry(BaseModel):
+    message: str
+    level: str
+    source: str
+```
+
+Создание из словаря:
+```python
+entry = LogEntry(message="test", level="INFO", source="app")
+```
+
+Если передать не тот тип или забыть поле — сразу `ValidationError`.
+
+Полезные методы:
+* a. Превратить в словарь: `entry.model_dump()`
+* b. Превратить в JSON-строку: `entry.model_json_schema()`
+* c. Необязательные поля: `source: str = "unknown"`
+* d. Валидация значений: можно ограничить допустимые значения через `Literal`, `Field` и т.д.

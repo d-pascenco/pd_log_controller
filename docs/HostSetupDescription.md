@@ -315,7 +315,6 @@ EOF
 docker-compose.prod.yml
 ```
 
-
 ## 7. Запуск приложений проекта
 
 ### 7.1 Streamlit

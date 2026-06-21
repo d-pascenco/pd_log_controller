@@ -6,7 +6,7 @@ API Reference: https://fastapi.tiangolo.com/reference/
 
 ### 1. FastAPI
 
-FastAPI — это фреймворк для создания бэкенда на Python.
+Это фреймворк для создания бэкенда на Python.
 Принимает HTTP-запросы и возвращает ответы в формате JSON.
 
 ### 2. Установка

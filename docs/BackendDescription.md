@@ -40,11 +40,11 @@ Base.metadata.create_all(bind=engine)
 ```python
 def create_log(entry: LogEntry, db: Session = Depends(get_db)):
 ```
-`db` — это сессия. Через неё делаем все операции с БД.
+`db` — это сессия. Через неё делаю все операции с БД.
 
-**POST /logs** — что происходит по шагам:
+**POST /logs** — что происходит:
 1. `Log(...)` — создаём Python-объект из модели
-2. `db.add(log)` — добавляем в сессию (ещё не в БД)
+2. `db.add(log)` — добавляем в сессию (пока не в бд)
 3. `db.commit()` — записываем в БД
 4. `db.refresh(log)` — обновляем объект (получаем `id` и `timestamp` из БД)
 

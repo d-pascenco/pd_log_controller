@@ -229,13 +229,13 @@ chmod 700 /home/pd/pd_log_controller/.ssh
 ### 3.3 Ошибка неправильного указания SSH-ключа
 Неправильная команда:
 ```bash
-ssh -l /home/pd/pd_log_controller/.ssh/ssh-hse-priv.key rocky@158.101.7.150
+ssh -l /home/pd/pd_log_controller/.ssh/ssh-hse-priv.key rocky@11.11.11.111
 ```
 Опция `-l` означает login, то есть имя пользователя, а не путь к ключу.
 
 Правильно использовать опцию `-i`:
 ```bash
-ssh -i /home/pd/pd_log_controller/.ssh/ssh-hse-priv.key rocky@158.101.7.150
+ssh -i /home/pd/pd_log_controller/.ssh/ssh-hse-priv.key rocky@11.11.11.111
 ```
 
 ## 4. Проверка характеристик системы
